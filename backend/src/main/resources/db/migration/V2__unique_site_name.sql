@@ -1,0 +1,1 @@
+CREATE UNIQUE INDEX uq_site_name_ci ON site (lower(name));
