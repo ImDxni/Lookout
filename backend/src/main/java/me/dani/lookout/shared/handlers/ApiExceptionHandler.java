@@ -7,6 +7,7 @@ import org.hibernate.exception.ConstraintViolationException;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ProblemDetail;
+import org.springframework.security.core.AuthenticationException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
@@ -36,6 +37,12 @@ class ApiExceptionHandler {
         log.error("Unexpected data integrity violation (constraint: {})", constraint, ex);
         return ProblemDetail.forStatusAndDetail(HttpStatus.INTERNAL_SERVER_ERROR, "Unexpected error");
     }
+
+    @ExceptionHandler(AuthenticationException.class)
+    ProblemDetail authError(AuthenticationException ex){
+        return ProblemDetail.forStatusAndDetail(HttpStatus.UNAUTHORIZED,"Wrong credentials");
+    }
+
 
     private static String violatedConstraint(Throwable ex) {
 
