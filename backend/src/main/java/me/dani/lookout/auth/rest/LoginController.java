@@ -18,7 +18,7 @@ import org.springframework.security.web.context.HttpSessionSecurityContextReposi
 import org.springframework.security.web.csrf.CsrfToken;
 import org.springframework.web.bind.annotation.*;
 
-import static me.dani.lookout.shared.utils.EmailUtils.normalize;
+import static me.dani.lookout.shared.utils.Normalizer.normalizeEmail;
 
 @RestController
 @RequiredArgsConstructor
@@ -32,7 +32,7 @@ public class LoginController {
     @PostMapping("/login")
     public ResponseEntity<Void> login(@Valid @RequestBody LoginRequest request, HttpServletRequest httpServletRequest,
                                       HttpServletResponse httpServletResponse){
-        Authentication auth = UsernamePasswordAuthenticationToken.unauthenticated(normalize(request.email()),request.password());
+        Authentication auth = UsernamePasswordAuthenticationToken.unauthenticated(normalizeEmail(request.email()),request.password());
 
         Authentication authenticated = this.authenticationManager.authenticate(auth);
 

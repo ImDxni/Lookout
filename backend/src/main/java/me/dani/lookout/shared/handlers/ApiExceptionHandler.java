@@ -1,5 +1,6 @@
 package me.dani.lookout.shared.handlers;
 
+import me.dani.lookout.shared.utils.InvalidOriginException;
 import me.dani.lookout.site.exceptions.DuplicateSiteException;
 import me.dani.lookout.site.exceptions.SiteNotFoundException;
 import lombok.extern.slf4j.Slf4j;
@@ -19,6 +20,11 @@ class ApiExceptionHandler {
     @ExceptionHandler(SiteNotFoundException.class)
     ProblemDetail notFound(SiteNotFoundException ex) {
         return ProblemDetail.forStatusAndDetail(HttpStatus.NOT_FOUND, ex.getMessage());
+    }
+
+    @ExceptionHandler(InvalidOriginException.class)
+    ProblemDetail invalidOrigin(InvalidOriginException ex) {
+        return ProblemDetail.forStatusAndDetail(HttpStatus.BAD_REQUEST, ex.getMessage());
     }
 
     @ExceptionHandler(DuplicateSiteException.class)

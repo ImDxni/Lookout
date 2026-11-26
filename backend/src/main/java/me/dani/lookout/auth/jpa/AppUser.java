@@ -7,7 +7,7 @@ import org.hibernate.annotations.CreationTimestamp;
 import java.time.Instant;
 import java.util.UUID;
 
-import static me.dani.lookout.shared.utils.EmailUtils.normalize;
+import static me.dani.lookout.shared.utils.Normalizer.normalizeEmail;
 
 @Entity
 @Table(name = "app_user")
@@ -31,7 +31,7 @@ public class AppUser {
     protected AppUser(){}
 
     public AppUser(String email, String password){
-        this.email = normalize(email);
+        this.email = normalizeEmail(email);
         this.password = password;
     }
 }

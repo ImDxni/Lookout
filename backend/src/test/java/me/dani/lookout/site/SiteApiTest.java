@@ -179,6 +179,49 @@ class SiteApiTest extends ApiIntegrationTest {
     }
 
     @Test
+    void originsAreNormalizedAndDeduplicated() {
+        loggedInClient();
+
+        var response = client.post("/api/sites", siteJson(uniqueName(),
+                "[\"HTTPS://Blog.Example.com/\", \"https://blog.example.com:443\", \"http://localhost:3000\"]", "1.0"));
+
+        assertThat(response.statusCode()).isEqualTo(201);
+        List<String> origins = json(response, "$.allowedOrigins");
+        assertThat(origins).containsExactlyInAnyOrder("https://blog.example.com", "http://localhost:3000");
+    }
+
+    @Test
+    void createWithInvalidOriginIs400() {
+        loggedInClient();
+
+        var response = client.post("/api/sites", siteJson(uniqueName(), "[\"https://blog.example.com/configurator\"]", "1.0"));
+
+        assertThat(response.statusCode()).isEqualTo(400);
+        assertThat(json(response, "$.detail").toString()).contains("https://blog.example.com/configurator");
+    }
+
+    @Test
+    void updateWithInvalidOriginIs400() {
+        loggedInClient();
+        String id = json(createSite(uniqueName()), "$.id");
+
+        assertThat(client.put("/api/sites/" + id, siteJson(uniqueName(), "[\"ftp://blog.example.com\"]", "1.0")).statusCode())
+                .isEqualTo(400);
+    }
+
+    @Test
+    void updateStripsSurroundingSpacesFromName() {
+        loggedInClient();
+        String name = uniqueName();
+        String id = json(createSite(uniqueName()), "$.id");
+
+        var response = client.put("/api/sites/" + id, siteJson("  " + name + "  ", "[]", "1.0"));
+
+        assertThat(response.statusCode()).isEqualTo(200);
+        assertThat(json(response, "$.name").toString()).isEqualTo(name);
+    }
+
+    @Test
     void deleteIs204ThenGoneWith404() {
         loggedInClient();
         String id = json(createSite(uniqueName()), "$.id");
