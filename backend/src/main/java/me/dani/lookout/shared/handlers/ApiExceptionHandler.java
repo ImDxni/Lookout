@@ -1,5 +1,6 @@
 package me.dani.lookout.shared.handlers;
 
+import me.dani.lookout.rum.exceptions.RumBatchRejectedException;
 import me.dani.lookout.shared.utils.InvalidOriginException;
 import me.dani.lookout.site.exceptions.DuplicateSiteException;
 import me.dani.lookout.site.exceptions.SiteNotFoundException;
@@ -20,6 +21,11 @@ class ApiExceptionHandler {
     @ExceptionHandler(SiteNotFoundException.class)
     ProblemDetail notFound(SiteNotFoundException ex) {
         return ProblemDetail.forStatusAndDetail(HttpStatus.NOT_FOUND, ex.getMessage());
+    }
+
+    @ExceptionHandler(RumBatchRejectedException.class)
+    ProblemDetail rumBatchRejected(RumBatchRejectedException ex) {
+        return ProblemDetail.forStatusAndDetail(ex.getStatus(), ex.getMessage());
     }
 
     @ExceptionHandler(InvalidOriginException.class)

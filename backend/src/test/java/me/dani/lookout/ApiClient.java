@@ -11,6 +11,7 @@ import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
+import java.util.Map;
 import java.util.Optional;
 
 public final class ApiClient {
@@ -82,12 +83,22 @@ public final class ApiClient {
         return json == null ? HttpRequest.BodyPublishers.noBody() : HttpRequest.BodyPublishers.ofString(json);
     }
 
+    public HttpResponse<String> postRaw(String path, String body, String contentType, Map<String, String> headers) {
+        HttpRequest.Builder builder = request(path).POST(body(body)).header("Content-Type", contentType);
+        headers.forEach(builder::header);
+        return execute(builder);
+    }
+
     private HttpResponse<String> send(HttpRequest.Builder builder, boolean mutating) {
         builder.header("Content-Type", "application/json");
         if (mutating && sendCsrf) {
             cookie("XSRF-TOKEN").ifPresent(token -> builder.header("X-XSRF-TOKEN", token));
         }
         sendCsrf = true;
+        return execute(builder);
+    }
+
+    private HttpResponse<String> execute(HttpRequest.Builder builder) {
         try {
             return http.send(builder.build(), HttpResponse.BodyHandlers.ofString());
         } catch (IOException e) {

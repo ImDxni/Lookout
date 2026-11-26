@@ -25,7 +25,11 @@ public abstract class ApiIntegrationTest {
 
     @BeforeEach
     void newClient() {
-        client = new ApiClient(environment.getRequiredProperty("local.server.port", Integer.class));
+        client = anonymousClient();
+    }
+
+    protected ApiClient anonymousClient() {
+        return new ApiClient(environment.getRequiredProperty("local.server.port", Integer.class));
     }
 
     protected ApiClient loggedInClient() {

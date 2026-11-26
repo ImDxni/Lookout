@@ -2,6 +2,7 @@ package me.dani.lookout.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.annotation.Order;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.ProviderManager;
@@ -25,6 +26,7 @@ import java.util.List;
 @Configuration
 public class SecurityConfig {
     @Bean
+    @Order(2)
     public SecurityFilterChain filterChain(HttpSecurity http, CsrfTokenRepository csrfTokenRepository) throws Exception {
         http.csrf(csrf -> csrf.spa().csrfTokenRepository(csrfTokenRepository))
                 .logout(logout -> logout.logoutUrl("/api/auth/logout")
