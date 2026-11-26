@@ -27,6 +27,11 @@ What becomes easier or harder because of this decision.
 
 | # | Title | Status |
 |---|-------|--------|
-| | | |
+| [000](000-why-this-project.md) | Why this project | Accepted |
+| [001](001-admin-authentication.md) | Admin authentication: server-side session with CSRF protection | Accepted |
+| [002](002-admin-bootstrap.md) | Creating the single administrator | Accepted |
+| [003](003-schema-migrations.md) | Database schema managed by Flyway inside the application | Accepted |
+| [004](004-configuration-and-secrets.md) | Configuration profiles and secrets | Accepted |
+| [005](005-api-design-and-errors.md) | Admin API design and error responses | Accepted |
 
 Reference: https://adr.github.io

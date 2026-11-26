@@ -7,17 +7,15 @@ import org.hibernate.annotations.CreationTimestamp;
 import java.time.Instant;
 import java.util.UUID;
 
-import static me.dani.lookout.shared.utils.StringUtils.normalizeEmail;
+import static me.dani.lookout.shared.utils.EmailUtils.normalize;
 
 @Entity
 @Table(name = "app_user")
 @Getter
-
 public class AppUser {
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
-
 
     @Column(nullable = false)
     private String email;
@@ -33,7 +31,7 @@ public class AppUser {
     protected AppUser(){}
 
     public AppUser(String email, String password){
-        this.email = normalizeEmail(email);
+        this.email = normalize(email);
         this.password = password;
     }
 }
